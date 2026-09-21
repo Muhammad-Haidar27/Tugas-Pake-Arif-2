@@ -3,32 +3,42 @@ import pandas as pd
 
 df = pd.read_csv("dataset_penjualan_kantin.csv")
 
-# 1. Konversi data ke numerik lebih awal
+# 1. Data Loading Dan Inspection
+print("\n--- 5 Baris Pertama")
+print(df.head())
+
+print("\n Info Dataset")
+df.info()
+
+# 2. Konversi data ke numerik lebih awal
 df["jumlah_terjual"] = (
     pd.to_numeric(df["jumlah_terjual"], errors="coerce").fillna(0).astype(int)
 )
 df["harga_satuan"] = pd.to_numeric(df["harga_satuan"], errors="coerce")
 
-# 2. Hapus baris jika harga_satuan atau nama_kasir bernilai NaN
+# 3. Hapus baris jika harga_satuan atau nama_kasir bernilai NaN
 df = df.dropna(subset=["harga_satuan", "nama_kasir"])
 
-# 3. Hapus duplikat
+# 4. Hapus duplikat
 df = df.drop_duplicates().reset_index(drop=True)
 
-# 4. Hitung kolom turunan (sudah bebas dari NaN)
+# 5. Hitung kolom turunan (sudah bebas dari NaN)
 df["total_pendapat"] = df["harga_satuan"] * df["jumlah_terjual"]
 print("Total Pendapatan:")
 print(df["total_pendapat"])
 
-# 5. Mencari Menu Mahal (> 10000)
+# 6. Mencari Menu Mahal (> 10000)
 mahal = df[df["harga_satuan"] > 10000]
 print("\nMenu Mahal:")
 print(mahal)
 
-# 6. Membuat Ringkasan (Groupby)
+# 7. Membuat Ringkasan (Groupby)
 ringkasan = df.groupby("nama_produk")["total_pendapat"].sum()
 print("\nRingkasan Pendapatan per Produk:")
 print(ringkasan)
+
+# 8. Menampilkan Dataset Bersih
+print(df)
 
 # ==============================================================================
 # HASIL PENGISIAN FORMULIR PERENCANAAN PROYEK ANALISIS DATA KANTIN
