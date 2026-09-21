@@ -37,8 +37,34 @@ ringkasan = df.groupby("nama_produk")["total_pendapat"].sum()
 print("\nRingkasan Pendapatan per Produk:")
 print(ringkasan)
 
-# 8. Menampilkan Dataset Bersih
-print(df)
+# 8. Menyesuaikan semua tanggal agar formatnya sama
+bulan_indo = {
+    "Januari": "January",
+    "Februari": "February",
+    "Maret": "March",
+    "April": "April",
+    "Mei": "May",
+    "Juni": "June",
+    "Juli": "July",
+    "Agustus": "August",
+    "September": "September",
+    "Oktober": "October",
+    "November": "November",
+    "Desember": "December",
+}
+
+tanggal_clean = df["tanggal"].astype(str)
+for indo, eng in bulan_indo.items():
+  tanggal_clean = tanggal_clean.str.replace(indo, eng, regex=False)
+
+df["tanggal"] = pd.to_datetime(
+    tanggal_clean, format="mixed", dayfirst=True, errors="coerce"
+).dt.strftime("%Y-%m-%d")
+
+# 9. Menampilkan Dataset Bersih
+# Simpan DataFrame yang sudah bersih ke file CSV baru
+df.to_csv("dataset_kantin_bersih.csv", index=False)
+print("File 'dataset_kantin_bersih.csv' berhasil dibuat!")
 
 # ==============================================================================
 # HASIL PENGISIAN FORMULIR PERENCANAAN PROYEK ANALISIS DATA KANTIN
